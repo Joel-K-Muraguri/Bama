@@ -8,9 +8,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.joel.bama.presentation.views.destinations.ProfileScreenDestination
+import com.joel.bama.presentation.views.destinations.SignUpDestination
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@Destination
 @Composable
-fun Login(){
+fun Login(
+    navigator: DestinationsNavigator
+){
     
     var email by remember {
         mutableStateOf("")
@@ -62,7 +69,9 @@ fun Login(){
                     .padding(12.dp)
             )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                          navigator.navigate(ProfileScreenDestination)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp)
@@ -72,7 +81,7 @@ fun Login(){
 
             TextButton(
                 onClick = {
-
+                          navigator.navigate(SignUpDestination)
                 },
             ) {
                 Column(
@@ -89,8 +98,8 @@ fun Login(){
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginPreview(){
-    Login()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LoginPreview(){
+//    Login()
+//}

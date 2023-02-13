@@ -12,29 +12,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.joel.bama.presentation.components.Avatar
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 
 @Destination
 @Composable
 fun ProfileScreen(
-//    viewModel: AuthViewModel = hiltViewModel(), navigator: DestinationsNavigator
+//    viewModel: AuthViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ){
 //    viewModel.currentUser?.let {
 //        UserInfo(viewModel = viewModel, navigator = navigator, name = it.displayName.toString(), email = it.email.toString())
 //    }
-    UserInfo()
+    UserInfo(navigator)
 
 }
 
 @Composable
-fun UserInfo() {
+fun UserInfo(
+    navigator: DestinationsNavigator
+) {
 
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = {
-//                        navigator.popBackStack()
+                        navigator.popBackStack()
                     }) {
                         Icon(
                             painter = painterResource(id = com.joel.bama.R.drawable.ic_baseline_arrow_back),

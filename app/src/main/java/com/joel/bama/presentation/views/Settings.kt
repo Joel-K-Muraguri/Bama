@@ -11,13 +11,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.joel.bama.R
+import com.joel.bama.presentation.views.destinations.LoginDestination
+import com.joel.bama.presentation.views.destinations.SignUpDestination
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@Destination(start = true)
 @Composable
-fun Settings(){
+fun Settings(
+    navigator: DestinationsNavigator
+){
 
     val context = LocalContext.current
 
@@ -46,6 +52,8 @@ fun Settings(){
             Button(
                 onClick = {
                           Toast.makeText(context, "Signing in.....", Toast.LENGTH_LONG).show()
+                    navigator.navigate(LoginDestination)
+
                 },
                 modifier = Modifier
                     .padding(12.dp)
@@ -66,6 +74,7 @@ fun Settings(){
             Button(
                 onClick = {
                     Toast.makeText(context, "Creating new Account", Toast.LENGTH_LONG).show()
+                    navigator.navigate(SignUpDestination)
                 },
                 modifier = Modifier
                     .padding(22.dp)
@@ -87,8 +96,8 @@ fun Settings(){
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SettingsPreview(){
-    Settings()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SettingsPreview(){
+//    Settings()
+//}
