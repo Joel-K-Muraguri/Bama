@@ -1,113 +1,190 @@
 package com.joel.bama.presentation.views
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.joel.bama.presentation.views.destinations.LoginDestination
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.joel.bama.presentation.views.destinations.LogInScreenDestination
 import com.joel.bama.presentation.views.destinations.ProfileScreenDestination
+import com.joel.bama.utils.Resource
+import com.joel.bama.vm.AuthViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 
 @Destination
 @Composable
-fun SignUp(
+fun SignUpScreen(
+    navigator: DestinationsNavigator,
+    viewModel : AuthViewModel = hiltViewModel()
+){
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+            ) {
+
+            SignUpInputFields(viewModel, navigator)
+
+        }
+    }
+}
+
+@Composable
+fun SignUpInputFields(
+    viewModel: AuthViewModel,
     navigator: DestinationsNavigator
 ){
 
     var email by remember {
         mutableStateOf("")
     }
-    var newPassword by remember {
-        mutableStateOf("")
-    }
-    var confirmPassword by remember {
+
+    var password by remember {
         mutableStateOf("")
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Create Account")
-                }
-            )
-        }
+    var name by remember {
+        mutableStateOf("")
+    }
+
+    val authResource = viewModel.signupFlow.collectAsState()
+
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(12.dp)
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+
+        OutlinedTextField(
+            value = name,
+            onValueChange = {
+                name = it
+            },
+            label = {
+                Text(text = "Name")
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Person, contentDescription = "")
+            },
             modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        )
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = {
+                email = it
+            },
+            label = {
+                Text(text = "Email")
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Email, contentDescription = "")
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+
+        )
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = {
+                password = it
+            },
+            label = {
+                Text(text = "Password")
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Lock, contentDescription = "")
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
         ) {
-            OutlinedTextField(
-                value =  email,
-                onValueChange = {
-                    email = it
-                },
-                placeholder = {
-                    Text(text = "Email")
-                },
-                shape = RoundedCornerShape(15.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            )
-            OutlinedTextField(
-                value =  newPassword,
-                onValueChange = {
-                    newPassword = it
-                },
-                placeholder = {
-                    Text(text = "New Password")
-                },
-                shape = RoundedCornerShape(15.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            )
-            OutlinedTextField(
-                value =  confirmPassword,
-                onValueChange = {
-                    confirmPassword = it
-                },
-                placeholder = {
-                    Text(text = "Confirm Password")
-                },
-                shape = RoundedCornerShape(15.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            )
-            Button(
-                onClick = {
-                          navigator.navigate(ProfileScreenDestination)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
+            Column(
+                modifier = Modifier.padding(2.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Create Account")
+                Button(
+                    onClick = {
+                        viewModel.signup(name, email, password)
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(2f)
+                ) {
+                    Text(text = "SignUp")
+                }
+
+                TextButton(
+                    onClick = {
+                        navigator.navigate(LogInScreenDestination)
+                    },
+                ) {
+                    Column(
+                        modifier = Modifier.padding(6.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Already have an account?")
+                        Text(text = "Click here to login")
+                    }
+                }
+
             }
 
-            TextButton(
-                onClick = {
-                          navigator.navigate(LoginDestination)
-                },
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(6.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "Already have an account?")
-                    Text(text = "Click here to Sign in")
+        }
+
+        authResource.value?.let {
+            when(it){
+                is Resource.Failure -> {
+                    Log.d("SIGN UP", "${it.exception.message}")
+                    val context = LocalContext.current
+                    Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                }
+                Resource.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .scale(0.5f)
+                    )
+                }
+                is Resource.Success -> {
+                    LaunchedEffect(Unit){
+                        navigator.navigate(ProfileScreenDestination){
+                            popUpTo(ProfileScreenDestination){
+                                inclusive = true
+                            }
+                        }
+                    }
                 }
             }
         }

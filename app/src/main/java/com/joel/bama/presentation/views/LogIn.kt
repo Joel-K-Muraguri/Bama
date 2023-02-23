@@ -1,103 +1,174 @@
 package com.joel.bama.presentation.views
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.joel.bama.presentation.views.destinations.ProfileScreenDestination
-import com.joel.bama.presentation.views.destinations.SignUpDestination
+import com.joel.bama.presentation.views.destinations.SignUpScreenDestination
+import com.joel.bama.utils.Resource
+import com.joel.bama.vm.AuthViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 
 @Destination
 @Composable
-fun Login(
-    navigator: DestinationsNavigator
+fun LogInScreen(
+    navigator: DestinationsNavigator,
+    viewModel: AuthViewModel = hiltViewModel()
 ){
-    
-    var email by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
-    
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Sign In")
-                }
-            )
-        }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp)
-        ) {
-            OutlinedTextField(
-                value =  email,
-                onValueChange = {
-                                email = it
-                },
-                placeholder = {
-                    Text(text = "Email")
-                },
-                shape = RoundedCornerShape(15.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            )
-            OutlinedTextField(
-                value =  password,
-                onValueChange = {
-                    password = it
-                },
-                placeholder = {
-                    Text(text = "Password")
-                },
-                shape = RoundedCornerShape(15.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            )
-            Button(
-                onClick = {
-                          navigator.navigate(ProfileScreenDestination)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
+
             ) {
-                Text(text = "Sign In")
+
+            LoginInputFields(viewModel, navigator)
+
+        }
+    }
+
+
+
+
+}
+
+@Composable
+fun LoginInputFields(
+    viewModel: AuthViewModel,
+    navigator: DestinationsNavigator
+){
+
+    var email by remember {
+        mutableStateOf("")
+    }
+
+    var password by remember {
+        mutableStateOf("")
+    }
+
+    val authResource = viewModel.loginFlow.collectAsState()
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(12.dp)
+    ) {
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = {
+                email = it
+            },
+            label = {
+                Text(text = "Email")
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Email, contentDescription = "")
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        )
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = {
+                password = it
+            },
+            label = {
+                Text(text = "Password")
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Lock, contentDescription = "")
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .padding(22.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(22.dp)
+            ) {
+                Button(
+                    onClick = {
+                        viewModel.login(email, password)
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(2f)
+                ) {
+                    Text(text = "Login")
+                }
+
+                TextButton(
+                    onClick = {
+                        navigator.navigate(SignUpScreenDestination)
+                    },
+                ) {
+                    Column(
+                        modifier = Modifier.padding(6.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Don't have an account?")
+                        Text(text = "Click here to sign up")
+                    }
+                }
+
             }
 
-            TextButton(
-                onClick = {
-                          navigator.navigate(SignUpDestination)
-                },
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(6.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "Don't have an account?")
-                    Text(text = "Click here to Create Account")
+            authResource.value?.let {
+                when(it){
+                    is Resource.Failure -> {
+                        val context = LocalContext.current
+                        Toast.makeText(context, it.exception.message, Toast.LENGTH_SHORT).show()
+                    }
+                    Resource.Loading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .scale(0.5f)
+                        )
+                    }
+                    is Resource.Success -> {
+                        LaunchedEffect(Unit){
+                            navigator.navigate(ProfileScreenDestination){
+                                popUpTo(ProfileScreenDestination) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
-
 //@Preview(showBackground = true)
 //@Composable
 //fun LoginPreview(){
