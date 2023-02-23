@@ -1,6 +1,5 @@
 package com.joel.bama.presentation.views
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -14,8 +13,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.joel.bama.R
-import com.joel.bama.presentation.views.destinations.LoginDestination
-import com.joel.bama.presentation.views.destinations.SignUpDestination
+import com.joel.bama.presentation.views.destinations.LogInScreenDestination
+import com.joel.bama.presentation.views.destinations.SignUpScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -51,8 +50,7 @@ fun Settings(
         ) {
             Button(
                 onClick = {
-                          Toast.makeText(context, "Signing in.....", Toast.LENGTH_LONG).show()
-                    navigator.navigate(LoginDestination)
+                    navigator.navigate(LogInScreenDestination)
 
                 },
                 modifier = Modifier
@@ -73,8 +71,7 @@ fun Settings(
             }
             Button(
                 onClick = {
-                    Toast.makeText(context, "Creating new Account", Toast.LENGTH_LONG).show()
-                    navigator.navigate(SignUpDestination)
+                    navigator.navigate(SignUpScreenDestination)
                 },
                 modifier = Modifier
                     .padding(22.dp)
