@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "65090721559",
+    "project_id": "bama-f4787",
+    "storage_bucket": "bama-f4787.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65090721559:android:077a5f3c01106db21e4952",
+        "android_client_info": {
+          "package_name": "com.joel.bama"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65090721559-p5j109pl3rq7a7bp75f43i0dfj0fttht.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhri6UziKeGXPZUdSWK4yg-GVllrW8lpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65090721559-p5j109pl3rq7a7bp75f43i0dfj0fttht.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
