@@ -18,7 +18,9 @@ import com.joel.bama.core.ui.theme.BamaTheme
 import com.joel.bama.presentation.views.NavGraphs
 import com.joel.bama.presentation.views.Settings
 import com.ramcosta.composedestinations.DestinationsNavHost
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

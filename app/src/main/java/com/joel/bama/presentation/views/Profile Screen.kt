@@ -10,28 +10,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.joel.bama.R
 import com.joel.bama.presentation.components.Avatar
+import com.joel.bama.presentation.views.destinations.SettingsDestination
+import com.joel.bama.vm.AuthViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 
 
 @Destination
 @Composable
 fun ProfileScreen(
-//    viewModel: AuthViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: AuthViewModel = hiltViewModel(), navigator: DestinationsNavigator
 ){
-//    viewModel.currentUser?.let {
-//        UserInfo(viewModel = viewModel, navigator = navigator, name = it.displayName.toString(), email = it.email.toString())
-//    }
-    UserInfo(navigator)
-
-}
-
-@Composable
-fun UserInfo(
-    navigator: DestinationsNavigator
-) {
 
     Scaffold(
         topBar = {
@@ -41,19 +34,32 @@ fun UserInfo(
                         navigator.popBackStack()
                     }) {
                         Icon(
-                            painter = painterResource(id = com.joel.bama.R.drawable.ic_baseline_arrow_back),
+                            painter = painterResource(id = R.drawable.ic_baseline_arrow_back),
                             contentDescription = "")
                     }
-
                 },
                 title = {
                     Text(text = "User Profile")
+                },
+                actions = {
+                    IconButton(onClick = {
+                        navigator.navigate(SettingsDestination)
+                    }) {
+                        Icon(painter = painterResource(id = R.drawable.ic_baseline_settings_24), contentDescription = "")
+                    }
                 }
             )
-        },
-
-        )
+        })
     {
+        viewModel.currentUser?.let {
+            UserInfo(viewModel = viewModel, navigator = navigator, name = it.displayName.toString(), email = it.email.toString())
+        }
+    }
+}
+
+@Composable
+fun UserInfo(viewModel: AuthViewModel , navigator: DestinationsNavigator, name: String, email: String) {
+
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,7 +68,7 @@ fun UserInfo(
         ) {
 
             Text(
-                text = "Hi Joel",
+                text = "Hi $name",
                 fontSize = 24.sp,
                 modifier = Modifier
                     .padding(12.dp)
@@ -91,7 +97,7 @@ fun UserInfo(
                         .padding(12.dp)
                 )
                 Text(
-                    text = "Joel",
+                    text = name,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Light,
                     modifier = Modifier
@@ -114,7 +120,7 @@ fun UserInfo(
                         .padding(12.dp)
                 )
                 Text(
-                    text = "@gmail.com",
+                    text = email,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Light,
                     modifier = Modifier
@@ -129,12 +135,12 @@ fun UserInfo(
                     .padding(32.dp)
             ) {
                 Button(onClick = {
-//                    viewModel.logout()
-//                    navigator.navigate(LogInScreenDestination){
-//                        popUpTo(ListScreenDestination){
-//                            inclusive = true
-//                        }
-//                    }
+                    viewModel.logout()
+                    navigator.navigate(SettingsDestination){
+                        popUpTo(SettingsDestination){
+                            inclusive = true
+                        }
+                    }
                 },
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
@@ -142,8 +148,7 @@ fun UserInfo(
                 ) {
                     Text(text = "Logout")
                 }
-
             }
         }
-    }
+
 }
