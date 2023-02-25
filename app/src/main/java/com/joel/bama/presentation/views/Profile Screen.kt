@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.joel.bama.R
 import com.joel.bama.presentation.components.Avatar
-import com.joel.bama.presentation.views.destinations.LogInScreenDestination
 import com.joel.bama.presentation.views.destinations.SettingsDestination
 import com.joel.bama.vm.AuthViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -26,14 +25,6 @@ import com.ramcosta.composedestinations.navigation.popUpTo
 fun ProfileScreen(
     viewModel: AuthViewModel = hiltViewModel(), navigator: DestinationsNavigator
 ){
-    viewModel.currentUser?.let {
-        UserInfo(viewModel = viewModel, navigator = navigator, name = it.displayName.toString(), email = it.email.toString())
-    }
-
-}
-
-@Composable
-fun UserInfo(viewModel: AuthViewModel , navigator: DestinationsNavigator, name: String, email: String) {
 
     Scaffold(
         topBar = {
@@ -46,16 +37,29 @@ fun UserInfo(viewModel: AuthViewModel , navigator: DestinationsNavigator, name: 
                             painter = painterResource(id = R.drawable.ic_baseline_arrow_back),
                             contentDescription = "")
                     }
-
                 },
                 title = {
                     Text(text = "User Profile")
+                },
+                actions = {
+                    IconButton(onClick = {
+                        navigator.navigate(SettingsDestination)
+                    }) {
+                        Icon(painter = painterResource(id = R.drawable.ic_baseline_settings_24), contentDescription = "")
+                    }
                 }
             )
-        },
-
-        )
+        })
     {
+        viewModel.currentUser?.let {
+            UserInfo(viewModel = viewModel, navigator = navigator, name = it.displayName.toString(), email = it.email.toString())
+        }
+    }
+}
+
+@Composable
+fun UserInfo(viewModel: AuthViewModel , navigator: DestinationsNavigator, name: String, email: String) {
+
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -144,8 +148,7 @@ fun UserInfo(viewModel: AuthViewModel , navigator: DestinationsNavigator, name: 
                 ) {
                     Text(text = "Logout")
                 }
-
             }
         }
-    }
+
 }

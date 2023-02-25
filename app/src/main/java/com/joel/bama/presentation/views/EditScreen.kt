@@ -18,10 +18,13 @@ import androidx.compose.ui.unit.sp
 import com.joel.bama.R
 import com.joel.bama.core.ui.theme.BamaTheme
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun EditScreen(){
+fun EditScreen(
+    navigator: DestinationsNavigator
+){
 
     var item by remember {
         mutableStateOf("")
@@ -36,7 +39,11 @@ fun EditScreen(){
                          Text(text = "Add Item")
                      },
                      navigationIcon = {
-                         Icon(painter = painterResource(id = R.drawable.ic_baseline_arrow_back), contentDescription = "")
+                         IconButton(onClick = {
+                             navigator.popBackStack()
+                         }) {
+                             Icon(painter = painterResource(id = R.drawable.ic_baseline_arrow_back), contentDescription = "")
+                         }
                      }
                  )
         },
@@ -251,15 +258,14 @@ fun EditScreen(){
                     Text(text = "Save")
                 }
             }
-
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun EditPreview(){
-    BamaTheme {
-        EditScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun EditPreview(){
+//    BamaTheme {
+//        EditScreen()
+//    }
+//}
